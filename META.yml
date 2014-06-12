@@ -65,6 +65,7 @@ requires:
   Log::Any: '0'
   Module::Load: '0'
   Module::Loaded: '0'
+  Moo: '1.001'
   Moo::Lax: '0'
   Params::Validate: '0'
   Scalar::Util: '0'

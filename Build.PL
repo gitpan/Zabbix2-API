@@ -26,6 +26,7 @@ my $builder = Module::Build->new(
         'LWP::UserAgent' => 0,
         'Module::Load' => 0,
         'Module::Loaded' => 0,
+        'Moo' => 1.001000,
         'Moo::Lax' => 0,
         'Params::Validate' => 0,
         'Scalar::Util' => 0,
@@ -35,7 +36,7 @@ my $builder = Module::Build->new(
         'warnings' => 0,
     },
     add_to_cleanup      => [ 'Zabbix2::API-*' ],
-    release_status      => 'testing',
+    release_status      => 'stable',
     meta_merge          => { resources =>
                              { repository => 'https://bitbucket.org/fgabolde/zabbix2-api' } },
 );

@@ -76,11 +76,9 @@ Zabbix2::API::Script -- Zabbix script objects
           name => 'nmap',
           command => '/usr/bin/nmap {HOST.CONN}',
           host_access => SCRIPT_HOSTPERM_READ,
-          usrgrpid => 0,
-          groupid => 0,
       },
   );
-  $script->push;
+  $script->create;
 
 =head1 DESCRIPTION
 

@@ -179,6 +179,7 @@ sub history {
     my $history = $self->{root}->query(method => 'history.get',
                                        params => { itemids => [ $self->id ],
                                                    output => 'extend',
+                                                   history => $self->data->{value_type},
                                                    %params });
     return $history;
 }
@@ -248,10 +249,12 @@ server.
 
 =head2 history
 
-  my $historical_data = $item->history(%params);
+  my $historical_data = $item->history(time_from => ...,
+                                       ...);
 
-Accessor for the item's history data.  Calling this method does not store the
-history data into the object, unlike other accessors.  History data is an AoH:
+Accessor for the item's history data.  Calling this method does not
+store the history data into the object, unlike other accessors.
+History data is an AoH:
 
   [ { itemid => ITEMID,
       clock => UNIX_TIMESTAMP,
@@ -259,9 +262,10 @@ history data into the object, unlike other accessors.  History data is an AoH:
       ns => NANOSECONDS }, ... ]
 
 The parameters should be suitable for the C<history.get> method (see
-here: L<http://www.zabbix.com/documentation/1.8/api/history/get>).
-The C<itemids> and C<output> parameters are already set (to the item's
-ID and "extend", respectively), but they can be overridden.
+L<here|https://www.zabbix.com/documentation/2.2/manual/api/reference/history/get>).
+The C<itemids>, C<output> and C<history> parameters are already set
+(to the item's ID, "extend" and the item's value type, respectively),
+but they can be overridden.
 
 =head1 EXPORTS
 
