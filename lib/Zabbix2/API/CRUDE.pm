@@ -309,6 +309,10 @@ sets the C<data> attribute with them.
 
 An exception is thrown if the object does not have an ID.
 
+Note that this method is not aware if you previously retrieved the
+object with an "output" parameter to limit the columns retrieved, so
+it will pull all columns from the server every time.
+
 =head2 short_class
 
   # this is a Unicorn

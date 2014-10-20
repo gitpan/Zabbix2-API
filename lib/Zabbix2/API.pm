@@ -15,7 +15,7 @@ use JSON;
 use LWP::UserAgent;
 use Log::Any;
 
-our $VERSION = '0.010';
+our $VERSION = '0.011';
 
 has 'server' => (is => 'ro',
                  required => 1);
@@ -98,7 +98,7 @@ sub _raw_query {
 
     # common parameters
     $args{'jsonrpc'} = '2.0';
-    $args{'auth'} = $self->cookie || '';
+    $args{'auth'} = $self->cookie if $self->cookie;
     $args{'id'} = $global_id++;
 
     my $response = eval { $self->ua->post($self->server,

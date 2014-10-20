@@ -18,7 +18,7 @@ name: Zabbix2-API
 provides:
   Zabbix2::API:
     file: lib/Zabbix2/API.pm
-    version: '0.010'
+    version: '0.011'
   Zabbix2::API::Action:
     file: lib/Zabbix2/API/Action.pm
   Zabbix2::API::Application:
@@ -69,6 +69,7 @@ requires:
   Moo::Lax: '0'
   Params::Validate: '0'
   Scalar::Util: '0'
+  Text::ParseWords: '0'
   URI: '0'
   autodie: '0'
   constant: '0'
@@ -77,5 +78,6 @@ requires:
   utf8: '0'
   warnings: '0'
 resources:
+  bugtracker: https://bitbucket.org/fgabolde/zabbix2-api/issues
   repository: https://bitbucket.org/fgabolde/zabbix2-api
-version: '0.010'
+version: '0.011'

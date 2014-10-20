@@ -63,24 +63,16 @@ $zabhost->update;
 
 my $new_host = Zabbix2::API::Host->new(root => $zabber,
                                        data => { host => 'Another Server',
-                                                 ip => '255.255.255.255',
-                                                 useip => 1,
-                                                 groups => [ { groupid => 4 } ] });
-
-isa_ok($new_host, 'Zabbix2::API::Host',
-       '... and a host created manually');
-
-$new_host->interfaces([ Zabbix2::API::HostInterface->new(
-                            root => $zabber,
-                            data => {
-                                dns => 'localhost',
-                                ip => '',
-                                main => 1,
-                                port => 10000,
-                                type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
-                                useip => 0,
-                            }) ]);
-
+                                                 groups => [ { groupid => 4 } ],
+                                                 interfaces => [
+                                                     {
+                                                         dns => 'localhost',
+                                                         ip => '',
+                                                         main => 1,
+                                                         port => 10000,
+                                                         type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
+                                                         useip => 0,
+                                                     } ] });
 eval { $new_host->create };
 
 if ($@) { diag "Caught exception: $@" };
@@ -93,7 +85,7 @@ $new_host->pull;
 is(scalar(@{$new_host->interfaces}), 1,
    q{... and the host interfaces survived});
 
-cmp_deeply($new_host->interfaces->[0]->data, {
+cmp_deeply($new_host->interfaces->[0]->data, superhashof({
     dns => 'localhost',
     interfaceid => re(qr/\d+/),
     hostid => $new_host->id,
@@ -101,7 +93,7 @@ cmp_deeply($new_host->interfaces->[0]->data, {
     main => 1,
     port => 10000,
     type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
-    useip => 0, },
+    useip => 0, }),
            q{... and they have some new data});
 
 eval { $new_host->delete };

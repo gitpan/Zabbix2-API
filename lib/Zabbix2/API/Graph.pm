@@ -11,7 +11,21 @@ use URI;
 use Params::Validate qw/validate :types/;
 
 use Moo::Lax;
-extends qw/Zabbix2::API::CRUDE/;
+extends qw/Exporter Zabbix2::API::CRUDE/;
+
+# extracted from frontends/php/include/defines.inc.php
+use constant {
+    GRAPH_TYPE_NORMAL => 0,
+    GRAPH_TYPE_STACKED => 1,
+    GRAPH_TYPE_PIE => 2,
+    GRAPH_TYPE_EXPLODED => 3,
+};
+
+our @EXPORT_OK = qw/GRAPH_TYPE_NORMAL GRAPH_TYPE_STACKED GRAPH_TYPE_PIE GRAPH_TYPE_EXPLODED/;
+
+our %EXPORT_TAGS = (
+    graphtypes => [ qw/GRAPH_TYPE_NORMAL GRAPH_TYPE_STACKED GRAPH_TYPE_PIE GRAPH_TYPE_EXPLODED/ ]
+    );
 
 use Zabbix2::API::GraphItem;
 
@@ -104,8 +118,19 @@ sub url {
 
     my $url = URI->new($base_url);
     my @path_segments = $url->path_segments;
+
     # replace api_jsonrpc.php with the chart generation page
-    $path_segments[-1] = 'chart2.php';
+    if ($self->data->{graphtype} == GRAPH_TYPE_NORMAL
+        or $self->data->{graphtype} == GRAPH_TYPE_STACKED) {
+        $path_segments[-1] = 'chart2.php';
+    } elsif ($self->data->{graphtype} == GRAPH_TYPE_PIE
+        or $self->data->{graphtype} == GRAPH_TYPE_EXPLODED) {
+        $path_segments[-1] = 'chart6.php';
+    } else {
+        croak(sprintf(q{Unknown graph type %d, cannot guess URL},
+                      $self->data->{graphtype}));
+    }
+
     $url->path_segments(@path_segments);
 
     $url->query_form(graphid => $self->id, %args);
@@ -243,6 +268,22 @@ regular requests:
   open my $image, '>', 'graph.png' or die $!;
   $image->print($response->decoded_content);
   $image->close;
+
+=head1 EXPORTS
+
+Some constants:
+
+  GRAPH_TYPE_NORMAL
+  GRAPH_TYPE_STACKED
+  GRAPH_TYPE_PIE
+  GRAPH_TYPE_EXPLODED
+
+They are not exported by default, only on request; or you could import
+the C<:graphtypes> tag.
+
+A bunch of constants (graphitem types, axis stuff, ...) are not
+defined.  If you need them, send me a feature request (or better, a
+pull request).
 
 =head1 SEE ALSO
 

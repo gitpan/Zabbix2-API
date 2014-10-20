@@ -6,6 +6,7 @@ use 5.010;
 use Carp;
 
 use Params::Validate qw/validate validate_with :types/;
+use Text::ParseWords;
 
 use Moo::Lax;
 extends qw/Exporter Zabbix2::API::CRUDE/;
@@ -157,9 +158,32 @@ sub _extension {
 
 sub name {
     my $self = shift;
-    return sprintf('%s/%s',
-                   eval { $self->host->name } || '???',
-                   $self->data->{key_} || '???');
+    return $self->data->{name};
+}
+
+sub expanded_name {
+
+    my $self = shift;
+
+    # we are not expanding hostmacros or globalmacros, those are problematic
+    my $key = $self->data->{key_};
+    my $token_re = qr/[0-9a-zA-Z_.-]+/;
+    $key =~ m/^$token_re\[(.*)\]$/;
+    my $arg_list = $1;
+
+    return $self->name unless $arg_list;
+
+    my @args = parse_line(',', 0, $arg_list);
+
+    my $name = $self->data->{name};
+    $name =~ s/\$(\d)/$args[$1 -1]/e;
+
+    # if ($name =~ m/\{\$[A-Z0-9_.]+\}/) {
+    #     die "there are macro names in this name, can't expand them";
+    # }
+
+    return $name;
+
 }
 
 sub _fetch_graphs {
@@ -246,6 +270,28 @@ This attribute is lazily populated with the item's host from the
 server.
 
 =head1 METHODS
+
+=head2 expanded_name
+
+  my $name = $item->expanded_name;
+
+Returns the item's name (its "name" property) with the macros
+expanded.
+
+Currently this only supports parameter replacement, so if the name is
+
+  CPU $2 time
+
+and the key is
+
+  system.cpu.util[,idle]
+
+the value returned should be "CPU idle time".
+
+Host macros and global macros are not replaced because this feature is
+not implemented directly in the API as far as I can tell, and a manual
+implementation in this wrapper would require many calls to the API
+macro endpoints.
 
 =head2 history
 

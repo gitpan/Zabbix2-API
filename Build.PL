@@ -31,14 +31,16 @@ my $builder = Module::Build->new(
         'Params::Validate' => 0,
         'Scalar::Util' => 0,
         'strict' => 0,
+        'Text::ParseWords' => 0,
         'URI' => 0,
         'utf8' => 0,
         'warnings' => 0,
     },
-    add_to_cleanup      => [ 'Zabbix2::API-*' ],
+    add_to_cleanup      => [ 'Zabbix2-API-*' ],
     release_status      => 'stable',
     meta_merge          => { resources =>
-                             { repository => 'https://bitbucket.org/fgabolde/zabbix2-api' } },
+                             { repository => 'https://bitbucket.org/fgabolde/zabbix2-api',
+                               bugtracker => 'https://bitbucket.org/fgabolde/zabbix2-api/issues' } },
 );
 
 $builder->create_build_script();

@@ -63,7 +63,7 @@ $zabbix_uptime->update;
 
 my $new_item = Zabbix2::API::Item->new(root => $zabber,
                                       data => { key_ => 'system.uptime[minutes]',
-                                                name => 'Uptime in minutes',
+                                                name => 'Uptime in $1',
                                                 delay => 300,
                                                 type => ITEM_TYPE_ZABBIX_ACTIVE,
                                                 value_type => ITEM_VALUE_TYPE_UINT64,
@@ -79,6 +79,9 @@ if ($@) { diag "Caught exception: $@" };
 
 ok($new_item->exists,
    '... and pushing it to the server creates a new item');
+
+is($new_item->expanded_name, 'Uptime in minutes',
+   q{... and its name is correctly expanded});
 
 eval { $new_item->delete };
 

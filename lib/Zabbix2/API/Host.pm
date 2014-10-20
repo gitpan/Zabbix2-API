@@ -145,6 +145,23 @@ Zabbix2::API::Host -- Zabbix host objects
   
   # this one doesn't
   my $interfaces = $host->interfaces;
+  
+  # create a new host and its interfaces in one fell swoop
+  my $new_host = Zabbix2::API::Host->new(
+      root => $zabbix,
+      data => {
+          host => 'the internal zabbix hostname',
+          name => 'the name displayed in most places',
+          groups => [ { groupid => 4 } ],
+          interfaces => [
+              { dns => 'some hostname',
+                ip => '',
+                useip => 0,
+                main => 1,
+                port => 10000,
+                type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
+              } ] });
+  $new_host->create;
 
 =head1 DESCRIPTION
 
@@ -181,7 +198,7 @@ Likewise, it is automatically used to populate the "interfaces"
 property before either C<create> or C<update> are called.
 
 Note that "interfaces" is a required property as far as the server is
-concerned, so you must defined it one way or another.
+concerned, so you must define it one way or another.
 
 =head2 items
 

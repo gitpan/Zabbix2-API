@@ -61,22 +61,33 @@ Zabbix2::API::HostInterface -- Zabbix host interface objects
 
 =head1 SYNOPSIS
 
-  my $new_host = Zabbix2::API::Host->new(root => $zabber,
-                                         data => { host => 'Another Server',
-                                                   ip => '255.255.255.255',
-                                                   useip => 1,
-                                                   groups => [ { groupid => 4 } ] });
-  $new_host->interfaces([ Zabbix2::API::HostInterface->new(
-                              root => $zabber,
-                              data => {
-                                  dns => 'localhost',
-                                  ip => '',
-                                  main => 1,
-                                  port => 10000,
-                                  type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
-                                  useip => 0,
-                              }) ]);
+  # create it with the host
+  my $new_host = Zabbix2::API::Host->new(
+      root => $zabbix,
+      data => {
+          host => 'the internal zabbix hostname',
+          name => 'the name displayed in most places',
+          groups => [ { groupid => 4 } ],
+          interfaces => [
+              { dns => 'some hostname',
+                ip => '',
+                useip => 0,
+                main => 1,
+                port => 10000,
+                type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
+              } ] });
   $new_host->create;
+  
+  # create it later
+  my $new_interface = Zabbix2::API::HostInterface->new(
+      dns => 'some other hostname',
+      ip => '',
+      useip => 0,
+      main => 1,
+      port => 10001,
+      type => Zabbix2::API::HostInterface::INTERFACE_TYPE_AGENT,
+      hostid => $new_host->id);
+  $new_interface->create;
 
 =head1 DESCRIPTION
 
