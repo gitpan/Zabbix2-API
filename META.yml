@@ -18,7 +18,7 @@ name: Zabbix2-API
 provides:
   Zabbix2::API:
     file: lib/Zabbix2/API.pm
-    version: '0.011'
+    version: '0.012'
   Zabbix2::API::Action:
     file: lib/Zabbix2/API/Action.pm
   Zabbix2::API::Application:
@@ -80,4 +80,4 @@ requires:
 resources:
   bugtracker: https://bitbucket.org/fgabolde/zabbix2-api/issues
   repository: https://bitbucket.org/fgabolde/zabbix2-api
-version: '0.011'
+version: '0.012'

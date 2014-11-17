@@ -53,7 +53,7 @@
    "provides" : {
       "Zabbix2::API" : {
          "file" : "lib/Zabbix2/API.pm",
-         "version" : "0.011"
+         "version" : "0.012"
       },
       "Zabbix2::API::Action" : {
          "file" : "lib/Zabbix2/API/Action.pm"
@@ -122,5 +122,5 @@
          "url" : "https://bitbucket.org/fgabolde/zabbix2-api"
       }
    },
-   "version" : "0.011"
+   "version" : "0.012"
 }
